@@ -1,16 +1,23 @@
- C = [{ time: Date.now(),
-        body: 'foo'   }]
+const block = require('./b')
+const Chain = require('./C')
 
-bC = b => C.push({   
-                    time: Date.now(),
-                    size: JSON.stringify(C).length,
-                  height: C.length,
-                  author: 'puukallistaja',
-                    body: b,    
-                })
+const validateData = x => x
+const getLatestHash = () => Chain.length ? Chain.slice(-1)[0].hash : '0'
 
-fooBar = bC
+module.exports = () => {
+  Chain.push({
 
-fooBar('helloWorld')
-
-require('fs').writeFileSync('./fooBar.json', JSON.stringify(C), 'utf8')
+  })
+  return {
+    link: data => Chain.push(block({
+      latestHash: getLatestHash(),
+      data: validateData({data})
+    })),
+    get latestBlock() {
+      return Chain.slice(-1)[0]
+    },
+    get fullChain() {
+      return Chain
+    }
+  }
+}
