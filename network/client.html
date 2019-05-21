@@ -15,13 +15,13 @@
     var socket = io('http://localhost:3000');
     socket.on('ready', function (data) {
       console.log(data);
-      socket.emit('blockData', { data: "Believe me - I've done very good stuff and very crazy stuff, and I don't regret the crazy stuff" });
+      socket.emit('blockData', { body: "Believe me - I've done very good stuff and very crazy stuff, and I don't regret the crazy stuff" });
     });
     
     document.querySelector('button').addEventListener('click', () => {
       socket.emit('blockData', { 
-        
-        data: JSON.stringify(Date.now())
+        key: "so_security.wow",
+        body: JSON.stringify(Date.now())
       })
     }, false)
   </script>
