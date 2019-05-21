@@ -1,0 +1,28 @@
+{
+  "name": "bc",
+  "version": "0.0.1",
+  "description": "blockchain protocol",
+  "main": "index.js",
+  "dependencies": {
+    "jest": "^24.8.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Puukallistaja/bC.git"
+  },
+  "keywords": [
+    "blockchain",
+    "proof-of-authority",
+    "crypto"
+  ],
+  "author": "Arto Haponen <arto@haponen.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Puukallistaja/bC/issues"
+  },
+  "homepage": "https://github.com/Puukallistaja/bC#readme"
+}
