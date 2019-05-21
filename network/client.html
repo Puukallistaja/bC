@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <button>
+    Send random blockdata
+  </button>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+  <script>
+    var socket = io('http://localhost:3000');
+    socket.on('ready', function (data) {
+      console.log(data);
+      socket.emit('blockData', { data: "Believe me - I've done very good stuff and very crazy stuff, and I don't regret the crazy stuff" });
+    });
+    
+    document.querySelector('button').addEventListener('click', () => {
+      socket.emit('blockData', { 
+        
+        data: JSON.stringify(Date.now())
+      })
+    }, false)
+  </script>
+</body>
+</html>

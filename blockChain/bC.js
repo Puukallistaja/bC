@@ -7,6 +7,7 @@ const stringifyChainMethod = method => ""+method
 
 const genesisBlock = {
   hash: 0,
+  height: 0,
   validator: stringifyChainMethod(validateData),
 }
 
@@ -17,6 +18,7 @@ module.exports = () => {
   
   return {
     link: data => Chain.push(block({
+      currentHeight: Chain.length,
       latestHash: getLatestHash(),
       data: validate({data})
     })),

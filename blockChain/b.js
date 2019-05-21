@@ -6,12 +6,23 @@ const hash = str =>
     .update(str)
     .digest("hex");
 
-const linkToLatestBlock = ({ latestHash, data }) =>
-  hash(JSON.stringify({ latestHash, data }))
+const linkToLatestBlock = ({ latestHash, height, data, time }) =>
+  hash(
+    JSON.stringify({
+      latestHash,
+      data,
+      time,
+      height
+    })
+  );
 
-module.exports = ({ latestHash, data }) => {
+module.exports = ({ latestHash, currentHeight, data }) => {
+  const time = JSON.stringify(Date.now());
+  const height = currentHeight
   return {
-    hash: linkToLatestBlock({ latestHash, data }),
+    time,
+    height,
+    hash: linkToLatestBlock({ latestHash, height, data, time }),
     body: data
   };
 };
