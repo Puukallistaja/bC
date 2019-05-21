@@ -1,4 +1,4 @@
-const blockChain = require('./bC')
+const blockChain = require('./blockChain/bC')
 
 const example = blockChain()
 
