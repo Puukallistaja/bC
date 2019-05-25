@@ -1,45 +1,83 @@
-const Chain = require("./C");
+const crypto = require("crypto");
 
-const genesisMaker = require("./genesis");
-const blockMaker = require("./b");
+const hash = str =>
+  crypto
+    .createHash("sha256")
+    .update(str)
+    .digest("hex");
 
-const validator = keys => key => keys.includes(key);
-const getPreviousHash = () => (Chain.length ? Chain.slice(-1)[0].hash : "0");
+module.exports = ({
+  genesis = {
+    name: "Batcoin",
+    difficulty: 3
+  }
+} = {}) => {
+  const genesisBlock = linkBlock(
+    makeBlock({
+      head: {
+        link: 0,
+        time: Date.now(),
+        height: 0,
+        difficulty: 3
+      },
+      txs: []
+    })
+  ).blockJSON;
 
-module.exports = () => {
-  const genesisBlock = Chain.length
-    ? Chain.slice(0, 1)[0]
-    : genesisMaker({ validator: validator(["so_security.wow"]) });
+  const Chain = [genesisBlock];
+  const txs = ["a", "b"];
 
-  if (!Chain.length) {
-    Chain.push(genesisBlock);
+  const tip = () => JSON.parse(Chain.slice(-1)[0]);
+
+  function mineBlock() {
+    let nonce = 0;
+    let block = linkBlock(makeBlock({ nonce, body: txs.slice(0, 2) }));
+    while (!checkBlock(block)) {
+      ++nonce;
+      block = linkBlock(makeBlock({ nonce, body: txs.slice(0, 2) }));
+    }
+    console.log(block);
   }
 
-  const block = blockMaker(genesisBlock);
+  function makeBlock({
+    body,
+    nonce,
+    head = {
+      link: tip().hash,
+      time: Date.now(),
+      height: ++tip().head.height,
+      difficulty: tip().head.difficulty
+    }
+  } = {}) {
+    return {
+      head: {
+        nonce,
+        ...head
+      },
+      body
+    };
+  }
+
+  function linkBlock(block) {
+    block.hash = hash(JSON.stringify(block.head));
+
+    return {
+      block,
+      blockJSON: JSON.stringify(block)
+    };
+  }
+  function checkBlock({ block, blockJSON }) {
+    return (
+      hash(JSON.stringify(block.head)) === block.hash &&
+      block.hash.slice(0, genesis.difficulty.length) === genesis.difficulty
+    );
+  }
+  function chainBlock(block) {
+    Chain.push(block);
+  }
 
   return {
-    link: ({ key, body }) => {
-      try {
-        const newBlock = block({
-          key,
-          body,
-          height: Chain.length,
-          previousHash: getPreviousHash()
-        });
-
-        if (newBlock) {
-          Chain.push(newBlock);
-        } else throw Error('Cannot link block')
-        
-      } catch (why) {
-        console.log(why)
-      }
-    },
-    get latestBlock() {
-      return Chain.slice(-1)[0];
-    },
-    get fullChain() {
-      return Chain;
-    }
+    mineBlock,
+    checkBlock
   };
 };
