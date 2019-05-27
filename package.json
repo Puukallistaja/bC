@@ -6,6 +6,11 @@
   "dependencies": {
     "socket.io": "^2.2.0"
   },
+  "jest": {
+    "testPathIgnorePatterns": ["blocks", "DATA"],
+    "modulePathIgnorePatterns": ["blocks"],
+    "watchPathIgnorePatterns": ["DATA"]
+  },
   "devDependencies": {
     "jest": "^24.8.0"
   },
