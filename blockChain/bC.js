@@ -1,25 +1,11 @@
-const crypto = require("crypto");
 const bC = require("./controller");
+const mineBlock = require("./miner");
 
 const io = require("./io");
-
-const hash = str =>
-  crypto
-    .createHash("sha256")
-    .update(str)
-    .digest("hex");
-
-const emitAndReturn = (event, x) => {
-  bC.emit(event, x);
-  return x;
-};
-
-let topBlock = io.readTopBlock();
+const { hash } = require("./crypto");
+const { topBlock } = require("./state");
 
 bC.on("block-created", io.writeBlock);
-bC.on("block-written", block => {
-  topBlock = block;
-});
 
 module.exports = ({
   genesis = {
@@ -30,35 +16,6 @@ module.exports = ({
   if (!topBlock) {
     console.log("No top block. Mining the Genesis block");
     mineBlock();
-  }
-
-  function mineBlock(body = []) {
-    let nonce = 0;
-    let block = linkBlock(makeBlock({ nonce, body }));
-    while (!checkBlock(block)) {
-      ++nonce;
-      block = linkBlock(makeBlock({ nonce, body }));
-    }
-    return emitAndReturn("block-created", block);
-  }
-
-  function makeBlock({ body, nonce }) {
-    const head = {
-      nonce,
-      link: topBlock ? topBlock.hash : 0,
-      time: Date.now(),
-      height: topBlock ? topBlock.head.height + 1 : 0,
-      difficulty: genesis.difficulty
-    };
-    return {
-      head,
-      body
-    };
-  }
-
-  function linkBlock(block) {
-    block.hash = hash(JSON.stringify(block.head));
-    return block;
   }
 
   function checkBlock(block) {
@@ -94,7 +51,7 @@ module.exports = ({
     }
   }
 
-  console.log(`Chain checked and intact: ${verifyAllBlockLinks()}`)
+  console.log(`Chain checked and intact: ${verifyAllBlockLinks()}`);
   return {
     mineBlock,
     verifyBlockLink,

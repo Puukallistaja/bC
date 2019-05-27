@@ -10,7 +10,6 @@ const testChain = bC({
 
 const freshBlock = testChain.mineBlock()
 
-
 describe("Chain exposes expected methods", () => {
   it("exposes miner function", () => {
     expect(testChain).toHaveProperty("mineBlock");
