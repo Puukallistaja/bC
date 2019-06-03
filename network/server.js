@@ -1,7 +1,7 @@
 const server = require('http').createServer();
 const io = require('socket.io')(server);
 
-const bC = require('../blockChain/bC')
+const bC = require('../chain/bC')
 
 const Stamp = bC()
 

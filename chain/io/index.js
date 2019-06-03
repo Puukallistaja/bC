@@ -2,7 +2,7 @@ const fs = require("fs");
 const fsAsync = fs.promises;
 const bC = require("../controller");
 
-const __dir = "./blockChain/DATA/blocks/";
+const __dir = "./chain/DATA/blocks/";
 
 function writeBlock(block) {
   try {
