@@ -1,8 +1,16 @@
 # bC protocol
 
-## Blocks
-### Genesis block
-
-
+### initiate / resume 
+```
+// in root
+const bC = require('./chain/bC)
+const chainInstance = bC({
+  name: 'TestChain',
+  difficulty: '0000'
+})
+```
 ### miner
-Initialize miner with top block of the chain
+```
+// body - Array of data to chain.
+chainInstance.mineBlock(body)
+```
