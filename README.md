@@ -11,6 +11,6 @@ const chainInstance = bC({
 ```
 ### miner
 ```
-// body - Array of data to chain.
+// body - Array of data to be chained.
 chainInstance.mineBlock(body)
 ```
