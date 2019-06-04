@@ -14,7 +14,7 @@ module.exports = ({
   }
 } = {}) => {
   if (!state.topBlock) {
-    console.log("No top block. Mining the Genesis block");
+    console.log("Mining the Genesis block");
     bC.emit('initiate-chain', genesis)
     mineBlock();
   } else {
@@ -30,10 +30,10 @@ module.exports = ({
       return io.readBlock(height);
     },
     getDifficulty() {
-      return topBlock.head.difficulty;
+      return state.topBlock.head.difficulty;
     },
     getHeight() {
-      return topBlock.head.height;
+      return state.topBlock.head.height;
     }
   };
 };
