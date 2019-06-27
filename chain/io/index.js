@@ -1,6 +1,6 @@
 const fs = require("fs");
 const fsAsync = fs.promises;
-const bC = require("../controller");
+const bC = require("../bus");
 
 const __dir = "./chain/DATA/blocks/";
 

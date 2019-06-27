@@ -1,4 +1,4 @@
-const bC = require("../controller");
+const bC = require("../bus");
 const makeBlock = require("./makeBlock");
 const linkBlock = require("./linkBlock");
 const { checkBlock } = require("../validator");

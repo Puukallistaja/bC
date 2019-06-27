@@ -1,4 +1,4 @@
-const bC = require("./controller");
+const bC = require("./bus");
 const mineBlock = require("./miner");
 
 const io = require("./io");

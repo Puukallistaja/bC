@@ -1,4 +1,4 @@
-const bC = require("./controller");
+const bC = require("./bus");
 const io = require("./io");
 
 const state = {
