@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "fs-extra": "^8.1.0"
+    "fs-extra": "^8.1.0",
+    "nodemon": "^1.19.4"
   }
 }
