@@ -1,36 +1,50 @@
 const fs = require("fs-extra")
-const stream = require("stream")
+const { Transform } = require("stream")
 const spawn = require("child_process").spawn
 const hash = require("crypto")
   .createHash("sha256")
   .setEncoding("hex")
-const pass = new stream.PassThrough()
+
+const data = []
 
 const piper = fn => (cmd, ...args) => fn(cmd, args).stdout.pipe(process.stdout)
 const cmd = piper(spawn)
-
-const isEqual = (...x) => x.every(element => element === x[0])
-const makeBlock = ({ headHash, dataHash }) => {}
 
 module.exports.bC = {
   split(from) {
     return
   },
-  chain({ chainName, filePath }) {
-    ;[...[filePath]].map(path =>
-      fs
-        .createReadStream(path)
-        // .pipe(
-        //   new stream.Transform({
-        //     transform(chunk, encoding, callback) {
-        //       console.log(chunk)
-        //       this.push(chunk)
-        //     }
-        //   })
-        // )
-        .pipe(hash)
-        .pipe(fs.createWriteStream(`./CHAINS/${chainName}/Head.bC`))
-    )
+  async chain({ chainName, filePath }) {
+    try {
+      const hashes = await Promise.all(
+        filePath.map(path => {
+          return new Promise((resolve, reject) => {
+            fs.createReadStream(path)
+              .pipe(hash)
+              .pipe(
+                (() => {
+                  const data = []
+                  return new Transform({
+                    transform(chunk, encoding, done) {
+                      data.push(chunk)
+                      done()
+                    },
+                    flush(done) {
+                      resolve(Buffer.concat(data).toString("utf8"))
+                      done()
+                    }
+                  }).on("end", chunk => {
+                    console.log("chunk.toString()")
+                  })
+                })()
+              )
+          })
+        })
+      )
+      console.log(hashes)
+    } catch (error) {
+      console.log(error)
+    }
   },
   join(to) {
     return
