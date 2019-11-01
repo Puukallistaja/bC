@@ -1,9 +1,7 @@
 const fs = require("fs-extra")
 const { Transform } = require("stream")
 const spawn = require("child_process").spawn
-const hash = require("crypto")
-  .createHash("sha256")
-  .setEncoding("hex")
+const crypto = require("crypto")
 
 const data = []
 
@@ -15,36 +13,17 @@ module.exports.bC = {
     return
   },
   async chain({ chainName, filePath }) {
-    try {
-      const hashes = await Promise.all(
-        filePath.map(path => {
-          return new Promise((resolve, reject) => {
+    const digests = await Promise.all(
+      filePath.map(
+        path =>
+          new Promise((resolve, reject) => {
             fs.createReadStream(path)
-              .pipe(hash)
-              .pipe(
-                (() => {
-                  const data = []
-                  return new Transform({
-                    transform(chunk, encoding, done) {
-                      data.push(chunk)
-                      done()
-                    },
-                    flush(done) {
-                      resolve(Buffer.concat(data).toString("utf8"))
-                      done()
-                    }
-                  }).on("end", chunk => {
-                    console.log("chunk.toString()")
-                  })
-                })()
-              )
+              .pipe(crypto.createHash("sha256").setEncoding("hex"))
+              .on("data", hash => resolve(hash))
           })
-        })
       )
-      console.log(hashes)
-    } catch (error) {
-      console.log(error)
-    }
+    )
+    console.log(digests)
   },
   join(to) {
     return
@@ -63,5 +42,5 @@ module.exports.bC = {
     cmd("git", "init", chainName)
     cmd("git", "-C", chainName, "status")
     cmd("ls", "CHAINS")
-  }
+  },
 }
