@@ -1,11 +1,13 @@
-const bC = require("./src/index.js").bC
+const bC = require("./src/index.js").bC({ name: "bC" })
 
-// bC.chain({
-//   chainName: "bC",
-//   filePaths: ["../Downloads/mineral moon.png", "../Downloads/mineral moon.png"],
-// })
-
-bC.lock({
-  path: "../Downloads/High Contrast - 2012 - The Agony & The Ecstasy/",
-  recursive: false,
-})
+;(async () => {
+    await bC.start()
+    bC.chain({
+      filePaths: ["../Downloads/mineral moon.png"],
+    })
+    
+    bC.lock({
+      path: "../Downloads/High Contrast - 2012 - The Agony & The Ecstasy/",
+      recursive: false,
+    })
+})()
