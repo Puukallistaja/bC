@@ -7,6 +7,6 @@ const example = blockChain({
 
 const data1 = 'fox jumps over lazy dog'
 const data2 = 'dog jumps over lazy fox'
-const data3 = 'nobody jumps over nobody'
+const data3 = 'nobody jumps over anybody'
 
 example.mineBlock([data1, data2, data3])
