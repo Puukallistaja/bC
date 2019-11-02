@@ -1,7 +1,6 @@
 const fs = require("fs-extra")
-const { Transform } = require("stream")
-const { exec, spawn } = require("child_process")
 const crypto = require("crypto")
+const { spawn } = require("child_process")
 
 const piper = fn => (cmd, ...args) => fn(cmd, args)
 const piperOut = fn => (cmd, ...args) =>
@@ -102,8 +101,8 @@ module.exports.bC = ({ name }) => {
         console.log(hashSizedChunk.toString())
       })
     },
-    delete(chain) {
-      return
+    delete() {
+      fs.remove(C.path)
     },
     async start() {
       await fs.ensureDir(C.path)
