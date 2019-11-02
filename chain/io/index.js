@@ -2,7 +2,7 @@ const fs = require("fs-extra")
 const bC = require("../bus")
 
 const __dir = "./chain/DATA/blocks/"
-
+const ascendingOrder = (x, y) => (x, y) => x.split(".")[0] - y.split(".")[0]
 function writeBlock(block) {
   try {
     fs.writeFileSync(__dir + block.head.height + ".json", JSON.stringify(block))
@@ -15,7 +15,7 @@ function readBlockList() {
   try {
     const blockList = fs.readdirSync(__dir)
     return blockList.length
-      ? blockList.sort((x, y) => x.split(".")[0] - y.split(".")[0])
+      ? blockList.sort(ascendingOrder)
       : false
   } catch (error) {
     throw error
