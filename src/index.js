@@ -1,11 +1,15 @@
 const fs = require("fs-extra")
 const { Transform } = require("stream")
-const spawn = require("child_process").spawn
+const { exec, spawn } = require("child_process")
 const crypto = require("crypto")
 
-const piper = fn => (cmd, ...args) => fn(cmd, args).stdout.pipe(process.stdout)
+const piper = fn => (cmd, ...args) => fn(cmd, args)
+const piperOut = fn => (cmd, ...args) =>
+  fn(cmd, args).stdout.pipe(process.stdout)
+
 const cmd = piper(spawn)
-const headPath = chainName => `./CHAINS/${chainName}/Head.bC`
+const cmdOut = piperOut(spawn)
+
 const hasher = path => {
   return new Promise((resolve, reject) => {
     fs.createReadStream(path)
@@ -13,12 +17,16 @@ const hasher = path => {
       .on("data", hash => resolve(hash))
   })
 }
+
 module.exports.bC = ({ name }) => {
   const CONFIG = (C = {
     name: name,
     path: "./CHAINS/" + name,
+    dataPath: "./CHAINS/" + name + "/data/",
     headPath: "./CHAINS/" + name + "/Head.bC",
   })
+
+  const fileName = path => path.split("/").slice(-1) + ".bC"
 
   return {
     split(from) {
@@ -31,22 +39,30 @@ module.exports.bC = ({ name }) => {
       return
     },
     async chain({ filePaths }) {
-      /**
-       * TODO >
-       * read files
-       * move to correct dir
-       * commit
-       */
-
-      filePaths.map(path =>
-        fs
-          .createReadStream(path)
-          .pipe(crypto.createHash("sha256").setEncoding("hex"))
-          .pipe(
-            fs.createWriteStream(C.headPath, {
-              flags: "a",
+      await Promise.all(
+        filePaths.map(
+          path =>
+            new Promise((resolve, reject) => {
+              fs.createReadStream(path)
+                .pipe(crypto.createHash("sha256").setEncoding("hex"))
+                .pipe(
+                  fs.createWriteStream(C.dataPath + fileName(path), {
+                    flags: "a",
+                  })
+                )
+                .on("finish", resolve)
             })
-          )
+        )
+      )
+
+      cmd("git", "-C", C.path, "add", ".")
+      cmdOut("git", "-C", C.path, "status")
+      cmd("git", "-C", C.path, "commit", "-m", "hash")
+      cmd("git", "-C", C.path, "log", "--pretty=format:'%H'").stdout.on(
+        "data",
+        chunk => {
+          console.log(chunk.toString().split('\n'))
+        }
       )
     },
     join(to) {
@@ -91,10 +107,11 @@ module.exports.bC = ({ name }) => {
     },
     async start() {
       await fs.ensureDir(C.path)
+      await fs.ensureDir(C.dataPath)
 
-      cmd("git", "init", C.path)
-      cmd("git", "-C", C.path, "status")
-      cmd("ls", "CHAINS")
+      cmdOut("git", "init", C.path)
+      cmdOut("git", "-C", C.path, "status")
+      cmdOut("ls", "CHAINS")
     },
   }
 }
