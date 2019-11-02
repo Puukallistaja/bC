@@ -4,8 +4,6 @@ const bC = require("../bus")
 
 const __dir = "./chain/DATA/blocks/"
 
-fs.ensureDir(__dir)
-
 function writeBlock(block) {
   try {
     fs.writeFileSync(__dir + block.head.height + ".json", JSON.stringify(block))
