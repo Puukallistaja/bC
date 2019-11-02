@@ -7,29 +7,35 @@ const data = []
 
 const piper = fn => (cmd, ...args) => fn(cmd, args).stdout.pipe(process.stdout)
 const cmd = piper(spawn)
+const headPath = chainName => `./CHAINS/${chainName}/Head.bC`
 
 module.exports.bC = {
   split(from) {
     return
   },
-  async chain({ chainName, filePath }) {
-    const digests = await Promise.all(
-      filePath.map(
-        path =>
-          new Promise((resolve, reject) => {
-            fs.createReadStream(path)
-              .pipe(crypto.createHash("sha256").setEncoding("hex"))
-              .on("data", hash => resolve(hash))
+  async chain({ chainName, filePaths }) {
+    console.log("Added ", ...filePaths, "to ", chainName)
+    filePaths.map(path =>
+      fs
+        .createReadStream(path)
+        .pipe(crypto.createHash("sha256").setEncoding("hex"))
+        .pipe(
+          fs.createWriteStream(headPath(chainName), {
+            flags: "a",
           })
-      )
+        )
     )
-    console.log(digests)
   },
   join(to) {
     return
   },
-  follow(chain) {
-    return
+  watch(chainName) {
+    console.log("watching")
+    fs.createReadStream(headPath(chainName), {
+      highWaterMark: 64,
+    }).on("data", hashSizedChunk => {
+      console.log(hashSizedChunk.toString())
+    })
   },
   delete(chain) {
     return

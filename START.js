@@ -1,7 +1,8 @@
-require("./src/index.js").bC.chain({
+const bC = require("./src/index.js").bC
+
+bC.chain({
   chainName: "bC",
-  filePath: [
-    "../Downloads/mineral moon.png",
-    // "../Downloads/mineral moon.png"
-  ]
+  filePaths: ["../Downloads/mineral moon.png", "../Downloads/mineral moon.png"],
 })
+
+bC.watch("bC")
