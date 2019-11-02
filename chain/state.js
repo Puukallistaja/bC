@@ -1,16 +1,16 @@
-const bC = require("./bus");
-const io = require("./io");
+const bC = require("./bus")
+const io = require("./io")
 
 const state = {
   genesis: null,
   topBlock: io.readTopBlock(),
-};
+}
 bC.on("initiate-chain", genesis => {
-  state.genesis = genesis;
-});
+  state.genesis = genesis
+})
 bC.on("block-written", block => {
-  state.topBlock = block;
-});
+  state.topBlock = block
+})
 
 module.exports = {
   get topBlock() {
@@ -18,5 +18,5 @@ module.exports = {
   },
   get genesis() {
     return state.genesis
-  }
+  },
 }

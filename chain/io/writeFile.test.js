@@ -1,1 +1,1 @@
-const io = require("./index");
+const io = require("./index")

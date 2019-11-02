@@ -1,6 +1,7 @@
 # bC protocol
 
-### initiate / resume 
+### initiate / resume
+
 ```
 // in root
 const bC = require('./chain/bC)
@@ -37,8 +38,8 @@ chainInstance.checkBlockLink(lower, higher)
 chainInstance.checkAllBlockLinks()
 
 /*
-* Reads a block from given height 
-* 
+* Reads a block from given height
+*
 * @height Number
 * @return Boolean
 *
@@ -46,7 +47,7 @@ chainInstance.checkAllBlockLinks()
 chainInstance.readBlock(height)
 
 /*
-* Exposes latest chain difficulty 
+* Exposes latest chain difficulty
 *
 * @return Boolean
 *
