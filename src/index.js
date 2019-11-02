@@ -55,15 +55,12 @@ module.exports.bC = ({ name }) => {
       )
 
       cmd("git", "-C", C.path, "add", ".")
-      cmdOut("git", "-C", C.path, "status")
-      cmd("git", "-C", C.path, "commit", "-m", "hash")
-      
-      cmd("git", "-C", C.path, "rev-list", "--all").stdout.on(
-        "data",
-        chunk => {
-          console.log(chunk.toString().split('\n').slice(0, -1))
-        }
-      )
+      cmd("git", "-C", C.path, "rev-list", "--all")
+        .stdout.pipe(crypto.createHash("sha256").setEncoding("hex"))
+        .on("data", chunk => {
+          cmd("git", "-C", C.path, "commit", "-m", chunk)
+        })
+      cmdOut("git", "-C", C.path, "log", "--oneline")
     },
     join(to) {
       return
@@ -104,7 +101,7 @@ module.exports.bC = ({ name }) => {
     },
     async delete() {
       await fs.remove(C.path)
-      console.log('Deleted ' + C.name)
+      console.log("Deleted " + C.name)
     },
     list() {
       cmdOut("ls", "CHAINS")

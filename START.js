@@ -1,9 +1,9 @@
 const bC = require("./src/index.js").bC({ name: "carrots" })
 
 ;(async () => {
-    await bC.start()
+    // await bC.start()
     bC.chain({
-      filePaths: ["../Downloads/mineral moon.png"],
+      filePaths: ["../Downloads/mineral moon.png", "./README.md"],
     })
     // bC.delete()
     // bC.lock({
