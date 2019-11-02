@@ -17,13 +17,14 @@
         console.log(data)
       })
       socket.on("block-chained", function(data) {
-        console.log(data)
+        console.log("Block chained", data)
       })
 
       document.querySelector("button").addEventListener(
         "click",
         () => {
           socket.emit("blockData", [JSON.stringify(Date.now())])
+          console.log("Sent current millis to be chained", )
         },
         false
       )

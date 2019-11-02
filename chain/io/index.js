@@ -1,5 +1,4 @@
 const fs = require("fs-extra")
-const fsAsync = fs.promises
 const bC = require("../bus")
 
 const __dir = "./chain/DATA/blocks/"
