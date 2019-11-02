@@ -104,13 +104,12 @@ module.exports.bC = ({ name }) => {
     delete() {
       fs.remove(C.path)
     },
-    async start() {
-      await fs.ensureDir(C.path)
-      await fs.ensureDir(C.dataPath)
-
-      cmdOut("git", "init", C.path)
-      cmdOut("git", "-C", C.path, "status")
+    list() {
       cmdOut("ls", "CHAINS")
+    },
+    async start() {
+      await fs.ensureDir(C.dataPath)
+      cmdOut("git", "init", C.path)
     },
   }
 }
