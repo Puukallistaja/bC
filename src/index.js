@@ -37,7 +37,7 @@ module.exports.bC = ({ name }) => {
        */
       return
     },
-    async chain({ filePaths }) {
+    async read({ filePaths }) {
       await Promise.all(
         filePaths.map(
           path =>
