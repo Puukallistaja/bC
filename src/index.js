@@ -65,6 +65,14 @@ module.exports.bC = ({ name }) => {
     join(to) {
       return
     },
+    digest() {
+      return crypto
+        .createHash("sha256")
+        .setEncoding("hex")
+        // .on('data', hash =>{
+        //   console.log('hashed')
+        //   console.log(hash)})
+    },
     async lock({ path, recursive = false }, struct = {}) {
       var _path = _path ? _path + path : path
       struct.root = struct.root || _path
